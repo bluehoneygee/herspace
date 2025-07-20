@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Poppins, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/context/Theme";
-import Navbar from "@/components/navigation/navbar";
+import { Toaster } from "sonner";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -24,24 +26,25 @@ export const metadata: Metadata = {
     "a safe space for women to share, ask questions, and grow—together—through tech, career, finance, mental health, and life.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout = async ({ children }: { children: React.ReactNode }) => {
+  const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} ${grotesk.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          {children}
-        </ThemeProvider>
-      </body>
+      <SessionProvider session={session}>
+        <body className={`${poppins.variable} ${grotesk.variable} antialiased`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+          <Toaster />
+        </body>
+      </SessionProvider>
     </html>
   );
-}
+};
+
+export default RootLayout;
