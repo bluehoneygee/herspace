@@ -31,8 +31,21 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
               isActive ? "bg-[#BFA5E2]  font-bold" : " font-medium"
             )}
           >
-            <Image src={item.imgURL} alt={item.label} width={20} height={20} />
-            <p>{item.label}</p>
+            <Image
+              src={item.imgURL}
+              alt={item.label}
+              width={20}
+              height={20}
+              className="invert dark:invert-0"
+            />
+            <p
+              className={cn(
+                isActive ? "base-bold" : "base-medium",
+                !isMobileNav && "max-lg:hidden"
+              )}
+            >
+              {item.label}
+            </p>
           </Link>
         );
         return isMobileNav ? (
